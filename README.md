@@ -30,3 +30,16 @@ Terraform 1.3.7
         region = "ap-northeast-2" //seoul region
         shared_credentials_files = [ "/home/$USER/.aws/credentials" ]
     }
+
+## Terraform 기본 명령어
+* terraform init
+   * 현재 디렉터리의 provider를 읽어 관련 플러그인을 자동으로 설치해주는 명령어
+
+* terraform plan
+   * 테라폼 코드로 인해 생성될 리소스 결과를 보여주는 명령어
+
+* terraform apply
+   * 테라폼 코드로 실제 리소스를 생성해주는 명령어
+
+* terraform destroy
+   * 테라폼으로 생성한 리소스를 삭제해주는 명령어 (.tfstate 파일 기준)
