@@ -11,3 +11,10 @@ Terraform makes it easier to create and manage infrastructure.
 
 3. Verify Terraform installed <Br>
    * ```Terraform version```
+
+## 작업 환경
+Windows에서 WSL2 설치 후 AWS-CLI 및 Terraform 설치
+
+VIsual Studio Code
+
+Terraform 1.3.7
