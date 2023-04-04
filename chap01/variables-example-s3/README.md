@@ -1,30 +1,21 @@
 # 개요
-* 테라폼 RESOURCE로 AWS 기본 인프라 환경 구성하기
+* 테라폼에서 variable 사용법
 
-## 구성도
-![](https://d1tlzifd8jdoy4.cloudfront.net/wp-content/uploads/2021/03/AWS-2tier-Networking-640x525.png)
+<br>
 
-## 작업 순서
-* VPC 구성
-   * VPC, Subnet, IGW, RT, SG
+## 작업
+* S3 생성 (main.tf)
 
-* EC2 구성
-   * KeyPair, amazon linux
+* variables.tf, terraform.tfvars
 
-* RDS 구성
-   * RDS Mysql, Subnet Groups
+* 실행
+```
+terraform init
+terraform apply
+```
 
-* S3 구성
-   * S3, Policy
+<br>
 
-## 테라폼 구조
-├─ terraform_study<br>
-│ ├─ terraform_study_20230202<br>
-│ │ &nbsp; ├─ .terraform<br>
-│ │ &nbsp; ├─ provider.tf<br>
-│ │ &nbsp; ├─ vpc.tf<br>
-│ │ &nbsp; ├─ ec2.tf<br>
-│ │ &nbsp; ├─ rds.tf<br>
-│ │ &nbsp; ├─ s3.tf<br>
-│ │ &nbsp; ├─ variables.tf<br>
-│ │ &nbsp; ├─ outputs.tf<br>
+### 우선 순위
+variables.tf에서 default로 변수 정의 vs terraform.tfvars에서 변수 정의 시 최종 인프라엔 어떤 변수 값이 반영될까?
+* variables.tf < terraform.tfvars
