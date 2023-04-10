@@ -15,3 +15,5 @@
 결과적으로 terraform.tfvars의 변수 값이 최종 인프라에 반영되었음
 
 * terraform.tfvaars > variables.tf default
+
+test
