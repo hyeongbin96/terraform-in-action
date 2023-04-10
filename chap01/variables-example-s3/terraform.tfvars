@@ -1,1 +1,0 @@
-aws_s3_bucket = "terraform-var-tfvars"
