@@ -3,7 +3,7 @@ resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
 
   tags = {
-    Name = "${var.tags}-vpc"
+    Name = "${var.tags}-VPC"
   }
 }
 
@@ -15,19 +15,31 @@ resource "aws_subnet" "pub_sub" {
   availability_zone = "${var.aws_az[count.index]}"
 
   tags = {
-    Name = "${var.tags}-pub-sub-${var.aws_az_des[count.index]}"
+    Name = "${var.tags}-SUB-PUBLIC-${var.aws_az_des[count.index]}"
   }
 }
 
-# private subnet
-resource "aws_subnet" "priv_sub" {
+# web subnet
+resource "aws_subnet" "web_sub" {
   count = length(var.aws_az)
   vpc_id = aws_vpc.vpc.id
-  cidr_block = "${var.private_subnet[count.index]}"
+  cidr_block = "${var.web_subnet[count.index]}"
   availability_zone = "${var.aws_az[count.index]}"
 
   tags = {
-    Name = "${var.tags}-priv-sub-${var.aws_az_des[count.index]}"
+    Name = "${var.tags}-SUB-WEB-${var.aws_az_des[count.index]}"
+  }
+}
+
+# db subnet
+resource "aws_subnet" "db_sub" {
+  count = length(var.aws_az)
+  vpc_id = aws_vpc.vpc.id
+  cidr_block = "${var.db_subnet[count.index]}"
+  availability_zone = "${var.aws_az[count.index]}"
+
+  tags = {
+    Name = "${var.tags}-SUB-DB-${var.aws_az_des[count.index]}"
   }
 }
 
@@ -36,7 +48,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "${var.tags}-igw"
+    Name = "${var.tags}-IGW"
   }
 }
 
@@ -51,7 +63,7 @@ resource "aws_route_table" "pub_rt" {
   }
 
   tags = {
-    Name = "${var.tags}-pub-rt"
+    Name = "${var.tags}-PUB-RT"
   }
 }
 
@@ -65,14 +77,14 @@ resource "aws_route_table_association" "pub_rt_association" {
 # NAT EIP
 resource "aws_eip" "nat_eip" {
   count = length(var.aws_az)
-  vpc = true
+  domain = "vpc"
 
   lifecycle {
     create_before_destroy = true
   }
 
   tags = {
-    Name = "${var.tags}-nat-${var.aws_az_des[count.index]}-eip"
+    Name = "${var.tags}-NAT-${var.aws_az_des[count.index]}-EIP"
   }
 }
 
@@ -83,11 +95,12 @@ resource "aws_nat_gateway" "nat_gw" {
   subnet_id = "${aws_subnet.pub_sub[count.index].id}"
 
   tags = {
-    Name = "${var.tags}-nat-${var.aws_az_des[count.index]}"
+    Name = "${var.tags}-NAT-${var.aws_az_des[count.index]}"
   }
 }
 
-resource "aws_route_table" "priv_rt" {
+# web routing table
+resource "aws_route_table" "web_rt" {
   count = length(var.aws_az)
   vpc_id = aws_vpc.vpc.id
   depends_on = [aws_nat_gateway.nat_gw]
@@ -98,12 +111,34 @@ resource "aws_route_table" "priv_rt" {
   }
 
   tags = {
-    Name = "${var.tags}-priv-rt-${var.aws_az_des[count.index]}"
+    Name = "${var.tags}-WEB-RT-${var.aws_az_des[count.index]}"
   }
 }
 
-resource "aws_route_table_association" "priv_rt_association" {
+resource "aws_route_table_association" "web_rt_association" {
   count = length(var.aws_az_des)
-  subnet_id = "${aws_subnet.priv_sub[count.index].id}"
-  route_table_id = "${aws_route_table.priv_rt[count.index].id}"
+  subnet_id = "${aws_subnet.web_sub[count.index].id}"
+  route_table_id = "${aws_route_table.web_rt[count.index].id}"
+}
+
+# db routing table
+resource "aws_route_table" "db_rt" {
+  count = length(var.aws_az)
+  vpc_id = aws_vpc.vpc.id
+  depends_on = [aws_nat_gateway.nat_gw]
+  
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = "${aws_nat_gateway.nat_gw[count.index].id}"
+  }
+
+  tags = {
+    Name = "${var.tags}-DB-RT-${var.aws_az_des[count.index]}"
+  }
+}
+
+resource "aws_route_table_association" "db_rt_association" {
+  count = length(var.aws_az_des)
+  subnet_id = "${aws_subnet.db_sub[count.index].id}"
+  route_table_id = "${aws_route_table.db_rt[count.index].id}"
 }

@@ -1,6 +1,6 @@
 variable "tags" {
     type = string
-    default = "hist-hb"
+    default = "HB"
     description = "Additinal your company and name tags"
 }
 
@@ -11,23 +11,29 @@ variable "aws_az" {
 
 variable "aws_az_des" {
     type = list
-    default = ["2a", "2c"]  
+    default = ["2A", "2C"]  
 }
 
 variable "vpc_cidr" {
     type = string
     default = "10.172.0.0/16"
-    description = "aws vpc cidr"
+    description = "vpc cidr"
 }
 
 variable "public_subnet" {
     type = list
     default = ["10.172.10.0/24", "10.172.20.0/24"]
-    description = "aws public subnet cidr"  
+    description = "public subnet cidr"  
 }
 
-variable "private_subnet" {
+variable "web_subnet" {
     type = list
     default = ["10.172.30.0/24", "10.172.40.0/24"]
-    description = "aws private subnet cidr" 
+    description = "app subnet cidr" 
+}
+
+variable "db_subnet" {
+    type = list
+    default = ["10.172.50.0/24", "10.172.60.0/24"]
+    description = "database subnet cidr" 
 }

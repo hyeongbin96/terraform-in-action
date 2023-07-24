@@ -4,7 +4,7 @@ provider "aws" {
    profile = "histdc-dev-terraform"
 }
 
-terraform {
+/* terraform {
   backend "s3" {
     bucket = "terraform-hb-backend"
     key    = "chap01-vpc.tfstate"
@@ -14,3 +14,4 @@ terraform {
     # encrypt        = true
   }
 }
+*/
