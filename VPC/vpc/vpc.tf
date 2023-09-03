@@ -76,7 +76,7 @@ resource "aws_route_table_association" "pub_rt_association" {
 
 # NAT EIP
 resource "aws_eip" "nat_eip" {
-  count = length(var.aws_az)
+  #count = length(var.aws_az)
   domain = "vpc"
 
   lifecycle {
@@ -84,61 +84,61 @@ resource "aws_eip" "nat_eip" {
   }
 
   tags = {
-    Name = "${var.tags}-NAT-${var.aws_az_des[count.index]}-EIP"
+    Name = "${var.tags}-EIP"
   }
 }
 
 # nat gateway
 resource "aws_nat_gateway" "nat_gw" {
-  count = length(var.aws_az)
-  allocation_id = "${aws_eip.nat_eip[count.index].id}"
-  subnet_id = "${aws_subnet.pub_sub[count.index].id}"
+  #count = length(var.aws_az)
+  allocation_id = "${aws_eip.nat_eip.id}"
+  subnet_id = "${aws_subnet.pub_sub[0].id}"
 
   tags = {
-    Name = "${var.tags}-NAT-${var.aws_az_des[count.index]}"
+    Name = "${var.tags}-NAT-${var.aws_az_des[0]}"
   }
 }
 
 # web routing table
 resource "aws_route_table" "web_rt" {
-  count = length(var.aws_az)
+  #count = length(var.aws_az)
   vpc_id = aws_vpc.vpc.id
   depends_on = [aws_nat_gateway.nat_gw]
   
   route {
     cidr_block = "0.0.0.0/0"
-    nat_gateway_id = "${aws_nat_gateway.nat_gw[count.index].id}"
+    nat_gateway_id = "${aws_nat_gateway.nat_gw.id}"
   }
 
   tags = {
-    Name = "${var.tags}-WEB-RT-${var.aws_az_des[count.index]}"
+    Name = "${var.tags}-WEB-RT"
   }
 }
 
 resource "aws_route_table_association" "web_rt_association" {
   count = length(var.aws_az_des)
   subnet_id = "${aws_subnet.web_sub[count.index].id}"
-  route_table_id = "${aws_route_table.web_rt[count.index].id}"
+  route_table_id = aws_route_table.web_rt.id
 }
 
 # db routing table
 resource "aws_route_table" "db_rt" {
-  count = length(var.aws_az)
+  #count = length(var.aws_az)
   vpc_id = aws_vpc.vpc.id
   depends_on = [aws_nat_gateway.nat_gw]
   
   route {
     cidr_block = "0.0.0.0/0"
-    nat_gateway_id = "${aws_nat_gateway.nat_gw[count.index].id}"
+    nat_gateway_id = "${aws_nat_gateway.nat_gw.id}"
   }
 
   tags = {
-    Name = "${var.tags}-DB-RT-${var.aws_az_des[count.index]}"
+    Name = "${var.tags}-DB-RT"
   }
 }
 
 resource "aws_route_table_association" "db_rt_association" {
   count = length(var.aws_az_des)
   subnet_id = "${aws_subnet.db_sub[count.index].id}"
-  route_table_id = "${aws_route_table.db_rt[count.index].id}"
+  route_table_id = aws_route_table.db_rt.id
 }
