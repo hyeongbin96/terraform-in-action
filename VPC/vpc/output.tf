@@ -3,9 +3,19 @@ output "vpc_id" {
   value = aws_vpc.vpc.id
 }
 
-output "subnet_id" {
-  description = "The ID of the SUBNET"
-  value = aws_subnet.pub_sub.*.id # pub_sub_2a id
+output "public_subnet_id" {
+  description = "The ID of the public subnet"
+  value = aws_subnet.pub_sub.*.id
+}
+
+output "web_subnet_id" {
+  description = "The ID of the web subnet"
+  value = aws_subnet.pub_sub.*.id
+}
+
+output "db_subnet_id" {
+  description = "The ID of the db subnet"
+  value = aws_subnet.pub_sub.*.id
 }
 
 output "tags" {

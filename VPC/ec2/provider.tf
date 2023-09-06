@@ -19,7 +19,7 @@ data "terraform_remote_state" "vpc" {
     backend = "s3"
     config = {
         bucket = "terraform-hb-backend"
-        key    = "chap01-vpc.tfstate"
+        key    = "vpc.tfstate"
         region = "ap-northeast-2"
         profile = "histdc-dev-terraform"
     }
