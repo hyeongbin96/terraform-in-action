@@ -14,7 +14,7 @@ resource "aws_instance" "bastion" {
   instance_type = "t3.medium"
   key_name = "hbjeon"
   subnet_id = data.terraform_remote_state.vpc.outputs.public_subnet_id[0]
-  vpc_security_group_ids = [aws_security_group.sg.id]
+  vpc_security_group_ids = [aws_security_group.bastion_sg.id]
 
   root_block_device {
     volume_size = "50"
@@ -32,7 +32,7 @@ resource "aws_instance" "web-2a" {
   instance_type = "t3.medium"
   key_name = "hbjeon"
   subnet_id = data.terraform_remote_state.vpc.outputs.web_subnet_id[0]
-  vpc_security_group_ids = [aws_security_group.sg.id]
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
 
   root_block_device {
     volume_size = "50"
@@ -50,7 +50,7 @@ resource "aws_instance" "web-2c" {
   instance_type = "t3.medium"
   key_name = "hbjeon"
   subnet_id = data.terraform_remote_state.vpc.outputs.web_subnet_id[1]
-  vpc_security_group_ids = [aws_security_group.sg.id]
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
 
   root_block_device {
     volume_size = "50"
