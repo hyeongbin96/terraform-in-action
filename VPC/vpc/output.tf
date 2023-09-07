@@ -10,12 +10,12 @@ output "public_subnet_id" {
 
 output "web_subnet_id" {
   description = "The ID of the web subnet"
-  value = aws_subnet.pub_sub.*.id
+  value = aws_subnet.web_sub.*.id
 }
 
 output "db_subnet_id" {
   description = "The ID of the db subnet"
-  value = aws_subnet.pub_sub.*.id
+  value = aws_subnet.db_sub.*.id
 }
 
 output "tags" {
