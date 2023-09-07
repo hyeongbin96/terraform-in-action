@@ -17,6 +17,12 @@ resource "aws_security_group" "bastion_sg" {
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
   }
+   egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "ICMP"
+    cidr_blocks      = ["0.0.0.0/0"]
+  } 
 
   tags = {
     NAME = "${data.terraform_remote_state.vpc.outputs.tags}-bastion-sg"
@@ -42,6 +48,12 @@ resource "aws_security_group" "web_sg" {
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
   }
+   egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "ICMP"
+    cidr_blocks      = ["0.0.0.0/0"]
+  } 
 
   tags = {
     NAME = "${data.terraform_remote_state.vpc.outputs.tags}-web-sg"
